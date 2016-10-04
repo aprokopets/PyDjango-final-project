@@ -1,0 +1,29 @@
+﻿{% include "header.html" %}
+
+<div class="container">
+    <div class="panel panel-info">
+    <div class="panel-heading">{{ page_title }}</div>
+        <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div style="padding-top:15px">
+            <div class="form-group">
+                <label for="id_image" class="col-sm-2 control-label">Select image to upload</label>
+                <div class="col-sm-10">
+                    <input id="id_image" type="file" class="" name="image">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_description" class="col-sm-2 control-label">Enter description</label>
+                <div class="col-xs-6">
+                    <input id="id_description" type="text" class="form-control" name="description" value='Test description' size='20'>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-info">Войти</button>
+                </div>
+            </div>
+        </div>
+        <!--<input style="padding-left:5px;" type="submit" value="Submit" />-->
+        </form>
+    </div>
+</div>
