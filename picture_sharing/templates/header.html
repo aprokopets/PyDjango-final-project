@@ -19,11 +19,22 @@
     <!--<div class="container"><header align="center">
         <h3>{{ page_title }}</h3>
     </header></div>-->
+    <div>
+      {{ user }}
+      {% if user.is_anonymous %}
+      <a href="/login/">login</a>
+      {% else %}
+      <a href="/logout/">logout</a>
+      {% endif %}
+    </div>
     <div class="container">
         <ul class="nav nav-tabs">
             <li role="presentation" class="{% if active_tab == 'main' %}active{% endif %}"><a href="/">Main</a></li>
             <li role="presentation" class="{% if active_tab == 'popular' %}active{% endif %}"><a href="/popular/">Popular</a></li>
             <li role="presentation" class="{% if active_tab == 'add' %}active{% endif %}"><a href="/add/">Add image</a></li>
+            {% if not user.is_anonymous %}
+                <li role="presentation" class="active"><a href="/private">Private</a></li>
+            {% endif %}
             {% if image_info %}
                 <li role="presentation" class="active"><a href="/{{ image_info }}/">{{ image_info }}</a></li>
             {% endif %}

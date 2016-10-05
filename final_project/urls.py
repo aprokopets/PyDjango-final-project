@@ -13,17 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from picture_sharing import views
 from django.conf.urls import static
 from final_project import settings
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
+    url(r'^login/$', auth_views.login),
+    url('^', include('django.contrib.auth.urls')),
     url(r'^$', views.index),
     url(r'^popular', views.popular),
     url(r'^add', views.add),
+    url(r'^private$', views.private),
     url(r'^delete/(\w+)', views.delete),
     url(r'^like/(\w+)', views.like),
     url(r'^admin', admin.site.urls),

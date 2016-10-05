@@ -126,3 +126,22 @@ def like(request, key):
         global _info
         _info = 'Error...  '+str(e)+'   The key is: "'+str(key)+'"'
         return redirect('/')
+        
+"""  User images  """
+def private(request):
+    global _info
+    copy_info = _info #take the info to show user
+    _info = ''        #cleaning info
+    
+    #print(settings.BASE_DIR)
+    #print(settings.MEDIA_ROOT)
+    if request.user.is_authenticated():
+        p = Picture.objects.order_by('-date_created')[:12]
+        ctx = {'pictures' : p }
+        ctx['info'] = copy_info
+        ctx['page_title'] = 'Recent images(by date)'
+        ctx['active_tab'] = 'private'
+        ctx['private'] = True
+        return render(request, 'index.html', ctx)
+    else:
+        return redirect('/')
