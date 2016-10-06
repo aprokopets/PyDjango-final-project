@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'^delete/(\w+)', views.delete),
     url(r'^like/(\w+)', views.like),
     url(r'^admin', admin.site.urls),
-    url(r'^(\w+)$', views.show_image),
+    url(r'^(?P<key>\w+)$', views.show_image, name='image'),
 ]
 
 if settings.DEBUG:

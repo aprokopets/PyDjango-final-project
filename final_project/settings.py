@@ -113,13 +113,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
-USE_I18N = True
+USE_I18N = True #механизм перевода строк, интернационализация
 
-USE_L10N = True
+USE_L10N = True #механизм форматирования дат и чисел в зависимости от локали пользователя, локализация
 
 USE_TZ = True
 

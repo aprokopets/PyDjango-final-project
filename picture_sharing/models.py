@@ -42,8 +42,9 @@ class Picture(models.Model):
 #       return instance
 
     def get_absolute_url(self):
-        #зачем нужен, и что должен делать
-        pass
+        from django.urls import reverse
+        return reverse('image', kwargs={'key': self.key})
+        
         
 class Like(models.Model):
     id = models.OneToOneField(Picture, primary_key=True)
