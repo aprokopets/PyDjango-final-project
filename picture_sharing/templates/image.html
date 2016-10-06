@@ -3,29 +3,30 @@
         <div class="panel panel-info">
             <div class="panel-heading"><div style="float: left">{{ page_title }}</div>
                 <div align="right" >
-                <a class="btn btn-info btn-sm" href='/delete/{{ key }}' role="button"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</a>
-                <a class="btn btn-info btn-sm" href='/like/{{ key }}' role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Like</a>
+                <a class="btn btn-info btn-sm" href='/delete/{{ picture.key }}' role="button"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</a>
+                <a class="btn btn-info btn-sm" href='/like/{{ picture.key }}' role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Like</a>
                 </div>
             </div>
             <div style="padding:15px">
                 <p></p>
                 <dl class="dl-horizontal">
-                <dt>Key</dt><dd>{{ key }}</dd>
-                <dt>Description</dt><dd>{{ description }}</dd>
-                <dt>Created</dt><dd>{{ date_created }}</dd>
-                <dt>Last viewed</dt><dd>{{ date_last_view }}</dd>
-                <dt>Views count</dt><dd>{{ views_count }}</dd>
+                <dt>User</dt><dd>{{ picture.user }}</dd>
+                <dt>Key</dt><dd>{{ picture.key }}</dd>
+                <dt>Description</dt><dd>{{ picture.description }}</dd>
+                <dt>Created</dt><dd>{{ picture.date_created }}</dd>
+                <dt>Last viewed</dt><dd>{{ picture.date_last_view }}</dd>
+                <dt>Views count</dt><dd>{{ picture.views_count }}</dd>
                 <dt>Likes</dt><dd>{{ likes }}</dd>
-                <dt>Dimensions (px)</dt><dd>{{ image.width }} x {{ image.height }}</dd>
-                <dt>Image filename</dt><dd>{{ image }}</dd>
-                <dt>Image size (bytes)</dt><dd>{{ image.size }}</dd>
+                <dt>Dimensions (px)</dt><dd>{{ picture.image.width }} x {{ picture.image.height }}</dd>
+                <dt>Image filename</dt><dd>{{ picture.image }}</dd>
+                <dt>Image size (bytes)</dt><dd>{{ picture.image.size }}</dd>
                 </dl>
-                <img src="{{ image.url }}" alt="{{description}}">
+                <img class='img-responsive' src="{{ picture.image.url }}" alt="{{picture.description}}">
             </div>
         </div>
         <!--<a class="btn btn-info" href='/' role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back to main</a>-->
         
     </div>
-    </form>
-  </body>
-</html>
+
+
+{% include "footer.html" %}

@@ -9,21 +9,32 @@
                 <div class="col-md-4">
                 <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="{{ picture.key }}">{{ picture.key }}</a>
+                    <a href="/{{ picture.key }}">{{ picture.key }}</a>
                 </div>
-                <!--<p>{{ picture.image }}</p>-->
-                <p style="margin-left:5px"><b>Decription:</b> {{ picture.description }}</p>
-                <p style="margin-left:5px"><b>Created:</b> {{ picture.date_created }}</p>
-                <p style="margin-left:5px"><b>Views:</b> {{ picture.views_count }}</p>
-                <a href="{{ picture.key }}" class="thumbnail">
-                    <img src="{{ picture.image.url }}" alt="{{picture.description}}" class="img-responsive">
-                </a>
+                    <!--<p>{{ picture.image }}</p>-->
+                    <p style="margin-left:5px"><b>Decription:</b> {{ picture.description }}</p>
+                    <p style="margin-left:5px"><b>Created:</b> {{ picture.date_created }}</p>
+                    <p style="margin-left:5px"><b>Views:</b> {{ picture.views_count }}</p>
+                    <p style="margin-left:5px"><b>User:</b> {{ picture.user}}</p>
+                    <a href="/{{ picture.key }}" class="thumbnail">
+                        <img src="{{ picture.image.url }}" alt="{{picture.description}}" class="img-responsive">
+                    </a>
                 </div>
                 </div>
+                {% if forloop.counter == 3 %}
+                    <article class="row"></article>
+                {% endif %}
+                {% if forloop.counter == 6 %}
+                    <article class="row"></article>
+                {% endif %}
+                {% if forloop.counter == 9 %}
+                    <article class="row"></article>
+                {% endif %}
+                
             {% endfor %}
             </article>
         </div>
         </div>
     </div>
-  </body>
-</html>
+    
+{% include "footer.html" %}

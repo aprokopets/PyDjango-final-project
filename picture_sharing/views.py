@@ -58,8 +58,12 @@ def add(request):
     ctx = {}
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
+        if request.user.is_authenticated():
+            user = str(request.user)
+        else:
+            user = 'anonymous'
         if form.is_valid():
-            obj = Picture.create(image=form.cleaned_data['image'], description=form.cleaned_data['description'])
+            obj = Picture.create(image=form.cleaned_data['image'], description=form.cleaned_data['description'], user=user)
             _info = 'image upload success'
             l = Like(id=obj)
             l.save()
@@ -86,11 +90,14 @@ def show_image(request, key):
         p.save()
 
         p = Picture.objects.get(key=key)
-        ctx['key']= p.key
+        """ctx['key']= p.key
         ctx['image'] =  p.image
         ctx['description'] = p.description
         ctx['date_created'] = p.date_created
         ctx['views_count'] = p.views_count
+        ctx['page_title'] = 'Image properties'
+        ctx['image_info'] = str(key)"""
+        ctx['picture'] = p
         ctx['page_title'] = 'Image properties'
         ctx['image_info'] = str(key)
         return render(request, 'image.html', ctx)
@@ -104,8 +111,11 @@ def delete(request, key):
     try:
         obj = Picture.objects.get(key=key)
         print(str(settings.MEDIA_ROOT) + str(obj.image))
-        os.remove(str(settings.MEDIA_ROOT) + '\\' + str(obj.image))
-        obj.delete()
+        if str(request.user) == str(obj.user):
+            os.remove(str(settings.MEDIA_ROOT) + '\\' + str(obj.image))
+            obj.delete()
+        else:
+            _info = 'You can not delete picture of user '+ str(obj.user) + ' because you are ' + str(request.user)
         
         return redirect('/')
     except Exception as e:
@@ -136,12 +146,20 @@ def private(request):
     #print(settings.BASE_DIR)
     #print(settings.MEDIA_ROOT)
     if request.user.is_authenticated():
-        p = Picture.objects.order_by('-date_created')[:12]
+        #copy_info = copy_info + str(request.user) #DEBUG: print username
+        p = Picture.objects.order_by('-date_created').filter(user=str(request.user))[:12]
+        ctx = {'pictures' : p }
+        ctx['info'] = copy_info
+        ctx['page_title'] = 'Recent images(by date) of user: '+str(request.user)
+        ctx['active_tab'] = 'private'
+        ctx['private'] = True
+        return render(request, 'index.html', ctx)
+    else:
+        #copy_info = copy_info + str(request.user) #DEBUG: print username
+        p = Picture.objects.order_by('-date_created').filter(user='anonymous')[:12]
         ctx = {'pictures' : p }
         ctx['info'] = copy_info
         ctx['page_title'] = 'Recent images(by date)'
         ctx['active_tab'] = 'private'
         ctx['private'] = True
         return render(request, 'index.html', ctx)
-    else:
-        return redirect('/')

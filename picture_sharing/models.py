@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.utils.baseconv import base56
 from random import randint
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -17,16 +18,17 @@ class Picture(models.Model):
     views_count = models.PositiveIntegerField(default=0)
     #likes_count = models.PositiveIntegerField(default=0)
     user = models.CharField(max_length=20, default='anonymous')
+    #auth_user = models.OneToOneField(User)
 
     def __str__(self):
         return self.key + ' : ' +str(self.image)
         
     @classmethod
-    def create(cls, image, description=''):
+    def create(cls, image, user, description=''):
         created = False
         while created == False:
             key = random_key()
-            obj, created = cls.objects.get_or_create(key=key, defaults={'image': image, 'description': description})
+            obj, created = cls.objects.get_or_create(key=key, defaults={'image': image, 'description': description, 'user': user})
         #l = Like.objects.create(id=obj.id)
         return obj
 
