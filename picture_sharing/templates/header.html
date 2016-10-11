@@ -10,13 +10,12 @@
     <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>-->
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    {% if info %}
-        <div class="alert alert-danger" role="alert">{{ info }}</div>
-    {% endif %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
     <div class="container"><header style="text-align: center">
         <h1>Welcome to my picture sharing app</h1>
     </header></div>
-    <!--<div class="container"><header align="center">
         <h3>{{ page_title }}</h3>
     </header></div>-->
     <div class="container">

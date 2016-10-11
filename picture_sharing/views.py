@@ -3,6 +3,8 @@ from django import forms
 from picture_sharing.models import Picture, Like
 from django.http import HttpResponse
 from django.db.models import F
+from django.contrib import messages
+
 
 from django.conf import settings
 import os
@@ -10,8 +12,6 @@ import final_project.settings
 
 # -*- coding: utf8 -*-
 # Create your views here.
-
-_info = ''
 
 class ImageUploadForm(forms.Form):
     """Image upload form."""
@@ -22,38 +22,24 @@ class ImageUploadForm(forms.Form):
 
 """  Main page  """
 def index(request):
-    global _info
-    copy_info = _info #take the info to show user
-    _info = ''        #cleaning info
     
-    #print(settings.BASE_DIR)
-    #print(settings.MEDIA_ROOT)
-
     p = Picture.objects.order_by('-date_created')[:12]
     ctx = {'pictures' : p }
-    ctx['info'] = copy_info
     ctx['page_title'] = 'Recent images(by date)'
     ctx['active_tab'] = 'main'
     return render(request, 'index.html', ctx)
 
 """ Popular """
 def popular(request):
-    global _info
-    copy_info = _info #take the info to show user
-    _info = ''        #cleaning info
     
     p = Picture.objects.order_by('-views_count')[:12]
     ctx = {'pictures' : p }
-    ctx['info'] = copy_info
     ctx['page_title'] = 'Popular images(by views)'
     ctx['active_tab'] = 'popular'
     return render(request, 'index.html', ctx)
     
 """ Add image """
 def add(request):
-    global _info
-    copy_info = _info #take the info to show user
-    _info = ''        #cleaning info
     
     ctx = {}
     if request.method == 'POST':
@@ -64,12 +50,14 @@ def add(request):
             user = 'anonymous'
         if form.is_valid():
             obj = Picture.create(image=form.cleaned_data['image'], description=form.cleaned_data['description'], user=user)
-            _info = 'image upload success'
+            messages.success(request, 'image upload success')
             l = Like(id=obj)
             l.save()
+            
+            
+            
             return redirect('/' + str(obj.key))
     else:
-        ctx['info'] = copy_info
         ctx['page_title'] = 'Add images'
         ctx['active_tab'] = 'add'
         return render(request, 'add.html', ctx)
@@ -84,26 +72,18 @@ def show_image(request, key):
             l = Like.objects.get(id=p.id)
             ctx['likes'] = l.likes
         except Exception as e:
-            global _info
-            _info = 'Error...  '+str(e)+'   The key is: "'+str(key)+'"'
+            messages.error(request, 'Error...  '+str(e)+'   The key is: "'+str(key)+'"')
         p.views_count = F('views_count') + 1 #increase views counter
         p.save()
 
         p = Picture.objects.get(key=key)
-        """ctx['key']= p.key
-        ctx['image'] =  p.image
-        ctx['description'] = p.description
-        ctx['date_created'] = p.date_created
-        ctx['views_count'] = p.views_count
-        ctx['page_title'] = 'Image properties'
-        ctx['image_info'] = str(key)"""
         ctx['picture'] = p
         ctx['page_title'] = 'Image properties'
         ctx['image_info'] = str(key)
         return render(request, 'image.html', ctx)
     except Exception as e:
-        global _info
-        _info = 'Error...  '+str(e)+'   The key is: "'+str(key)+'"'
+        
+        messages.error(request, 'Error...  '+str(e)+'   The key is: "'+str(key)+'"')
         return redirect('/')
 
 """Delete image"""
@@ -115,12 +95,10 @@ def delete(request, key):
             os.remove(str(settings.MEDIA_ROOT) + '\\' + str(obj.image))
             obj.delete()
         else:
-            _info = 'You can not delete picture of user '+ str(obj.user) + ' because you are ' + str(request.user)
-        
+            messages.error(request, 'You can not delete picture of user '+ str(obj.user) + ' because you are ' + str(request.user))
         return redirect('/')
     except Exception as e:
-        global _info
-        _info = 'Error...  '+str(e)+'   The key is: "'+str(key)+'"'
+        messages.error(request, 'Error...  '+str(e)+'   The key is: "'+str(key)+'"')
         return redirect('/')
 
 """ Add like to image """
@@ -133,32 +111,24 @@ def like(request, key):
         l.save()
         return redirect('/' + str(key))
     except Exception as e:
-        global _info
-        _info = 'Error...  '+str(e)+'   The key is: "'+str(key)+'"'
+        messages.error(request, 'Error...  '+str(e)+'   The key is: "'+str(key)+'"')
         return redirect('/')
         
 """  User images  """
 def private(request):
-    global _info
-    copy_info = _info #take the info to show user
-    _info = ''        #cleaning info
     
     #print(settings.BASE_DIR)
     #print(settings.MEDIA_ROOT)
     if request.user.is_authenticated():
-        #copy_info = copy_info + str(request.user) #DEBUG: print username
         p = Picture.objects.order_by('-date_created').filter(user=str(request.user))[:12]
         ctx = {'pictures' : p }
-        ctx['info'] = copy_info
         ctx['page_title'] = 'Recent images(by date) of user: '+str(request.user)
         ctx['active_tab'] = 'private'
         ctx['private'] = True
         return render(request, 'index.html', ctx)
     else:
-        #copy_info = copy_info + str(request.user) #DEBUG: print username
         p = Picture.objects.order_by('-date_created').filter(user='anonymous')[:12]
         ctx = {'pictures' : p }
-        ctx['info'] = copy_info
         ctx['page_title'] = 'Recent images(by date)'
         ctx['active_tab'] = 'private'
         ctx['private'] = True
