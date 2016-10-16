@@ -4,6 +4,10 @@ from picture_sharing.models import Picture, Like
 from django.http import HttpResponse
 from django.db.models import F
 from django.contrib import messages
+try:
+    from django.utils import simplejson as json
+except ImportError:
+    import json
 
 
 from django.conf import settings
@@ -102,16 +106,26 @@ def delete(request, key):
         return redirect('/')
 
 """ Add like to image """
-def like(request, key):
-    # уточнить, как можно обойти здесь auto_now
+def like(request):
+    if request.method == "POST":
+        rkey = request.POST.get('key', None)
+        print('rkey = ' + rkey)
+    
     try:
-        p = Picture.objects.get(key=key)
+        p = Picture.objects.get(key=rkey)
         l = Like.objects.get(id=p.id)
         l.likes = F('likes') + 1
         l.save()
-        return redirect('/' + str(key))
+        print('Success')
+        l = Like.objects.get(id=p.id)
+        ctx = {}
+        ctx['message'] = "You liked it"
+        ctx['likes_count'] = l.likes
+        return HttpResponse(json.dumps(ctx), content_type='application/json')
+        #return redirect('/' + str(key))
     except Exception as e:
-        messages.error(request, 'Error...  '+str(e)+'   The key is: "'+str(key)+'"')
+        print('Exception')
+        messages.error(request, 'Error...  '+str(e)+'   The key is: "'+str(rkey)+'"')
         return redirect('/')
         
 """  User images  """

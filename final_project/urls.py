@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^add', views.add),
     url(r'^private$', views.private),
     url(r'^delete/(\w+)', views.delete),
-    url(r'^like/(\w+)', views.like),
+    url(r'^like', views.like),
     url(r'^admin', admin.site.urls),
     url(r'^(?P<key>\w+)$', views.show_image, name='image'),
 ]

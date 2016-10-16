@@ -8,8 +8,10 @@
   </head>
   <body>
     <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>-->
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+
+    
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}

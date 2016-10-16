@@ -4,8 +4,25 @@
             <div class="panel-heading"><div style="float: left">{{ page_title }}</div>
                 <div align="right" >
                 <a class="btn btn-info btn-sm" href='/delete/{{ picture.key }}' role="button"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</a>
-                <a class="btn btn-info btn-sm" href='/like/{{ picture.key }}' role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Like</a>
+                <!--<a class="btn btn-info btn-sm" id='btn-like' role="button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Like</a>-->
+                <button type="button" class="btn btn-info btn-sm" id="btn-like" onclick="Likeaction()"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Like</button>
                 </div>
+                <script>
+                    function Likeaction(){
+                    $.ajax({
+                        type: "POST",
+                        url: "like",
+                        data: {'key': '{{ picture.key }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                        dataType: "json",
+                        success: function(response) {
+                                $('#likes_count').text(response.likes_count);
+                        },
+                        error: function(rs, e) {
+                                alert(rs.responseText);
+                        }
+                        }); 
+                    }
+                </script>
             </div>
             <div style="padding:15px">
                 <p></p>
@@ -16,16 +33,14 @@
                 <dt>Created</dt><dd>{{ picture.date_created }}</dd>
                 <dt>Last viewed</dt><dd>{{ picture.date_last_view }}</dd>
                 <dt>Views count</dt><dd>{{ picture.views_count }}</dd>
-                <dt>Likes</dt><dd>{{ likes }}</dd>
+                <dt>Likes</dt><dd id="likes_count">{{ likes }}</dd>
                 <dt>Dimensions (px)</dt><dd>{{ picture.image.width }} x {{ picture.image.height }}</dd>
                 <dt>Image filename</dt><dd>{{ picture.image }}</dd>
                 <dt>Image size (bytes)</dt><dd>{{ picture.image.size }}</dd>
                 </dl>
                 <img class='img-responsive' src="{{ picture.image.url }}" alt="{{picture.description}}">
             </div>
-        </div>
-        <!--<a class="btn btn-info" href='/' role="button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back to main</a>-->
-        
+        </div>        
     </div>
 
 
